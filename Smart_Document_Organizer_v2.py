@@ -7,11 +7,8 @@ import threading
 import queue
 import json
 from datetime import datetime
-
-# ============================================================
 # SMART DOCUMENT ORGANIZER - PRODUCTION BUILD
 # Local-only classification + threaded UI + undo history
-# ============================================================
 
 CATEGORY_KEYWORDS = {
     "Invoices": {
@@ -73,10 +70,7 @@ LOG_FILE = os.path.join(
     "organization_history.json"
 )
 
-
-# ============================================================
 # CLASSIFICATION
-# ============================================================
 
 def normalize_text(text):
     text = text.lower()
@@ -218,9 +212,7 @@ def classify_file(file_path):
     return category, score, "Content"
 
 
-# ============================================================
 # SAFE FILE MOVEMENT
-# ============================================================
 
 def safe_move(file_path, destination_folder):
     """Move a file without overwriting an existing file.
@@ -246,10 +238,7 @@ def safe_move(file_path, destination_folder):
     shutil.move(file_path, destination)
     return destination
 
-
-# ============================================================
 # ORGANIZATION HISTORY / UNDO
-# ============================================================
 
 def load_history():
     """Load local organization history safely."""
@@ -379,12 +368,11 @@ def undo_last_organization():
     restored = 0
     skipped = 0
 
-    # Reverse order prevents path conflicts when several files were moved.
+   
     for move in reversed(moves):
         original = move["original"]
         new = move["new"]
 
-        # The file may have been manually moved/deleted after organization.
         if not os.path.exists(new):
             skipped += 1
             continue
@@ -425,7 +413,7 @@ def undo_last_organization():
             f"Empty folders removed: {removed_dirs}"
         )
     else:
-        # Keep only the files that still need attention in the history.
+        # Keeping only the files that still need attention in the history.
         remaining_moves = []
 
         for move in moves:
@@ -448,9 +436,8 @@ def undo_last_organization():
     messagebox.showinfo("Undo Complete", result)
 
 
-# ============================================================
+
 # SAFETY LOGIC & THREADED PIPELINE
-# ============================================================
 
 WINDOWS_SYSTEM_DIRS = {
     "Windows",
@@ -663,9 +650,8 @@ def run_organization_thread(source_dir, ui_events):
         ui_events.put(("enable_buttons", None))
 
 
-# ============================================================
+
 # UI EVENT PROCESSING
-# ============================================================
 
 def process_ui_events(
     root_window,
@@ -738,10 +724,7 @@ def process_ui_events(
         undo_button,
     )
 
-
-# ============================================================
 # START ORGANIZATION
-# ============================================================
 
 def start_organization(
     source_dir,
@@ -794,10 +777,7 @@ def start_organization(
         daemon=True
     ).start()
 
-
-# ============================================================
 # BROWSE
-# ============================================================
 
 def browse_folder():
     folder_selected = filedialog.askdirectory()
@@ -811,16 +791,14 @@ def browse_folder():
         progress_label.config(text="")
 
 
-# ============================================================
 # USER INTERFACE
-# ============================================================
 
 root = tk.Tk()
 root.title("Local Intelligent File Organizer")
 root.geometry("600x380")
 root.resizable(False, False)
 
-# Optional application icon.
+#application icon.
 icon_path = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     "Smart_Document_Organizer.ico"
